@@ -9,7 +9,7 @@ Referensi:
 
 ## 1. Tujuan
 
-- Menutup temuan P0/P1 sebelum mainnet.
+
 - Tidak ada RTM yang tertahan di kontrak setelah transaksi sukses.
 - Data domain konsisten on-chain dan bisa dibaca dari browser/perangkat berbeda.
 - API kontrak tetap sederhana untuk frontend statis tanpa backend wajib.
