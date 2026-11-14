@@ -429,7 +429,7 @@ Semua default berikut disetujui dan diimplementasikan:
 - Deploy tx: `tx_37f9b3dbeb6f35167aaf015d29518cf9`
 - `init` tx: `tx_dc83d0d8f637ae4a0a9acf856ae8393e`
 - Versi: `v3.0.0`; treasury dan admin: `rete4203660202c54aeea6d540c2063eb928a049201dbf50a50123b7ab7dd608c44da641`
-- `retium verify` cocok dengan wasm release (81.388 byte).
+- `retium verify` cocok dengan wasm release (81.388 byte). Salinan wasm ada di `rns-app/contracts/rns_v3.wasm`. Build ulang: `cd contract && cargo build --release --locked --target wasm32-unknown-unknown -p rns_v3` (tanpa flag tambahan) menghasilkan byte yang identik dengan kontrak on-chain.
 
 ### Test yang sudah lulus
 

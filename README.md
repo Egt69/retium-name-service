@@ -121,6 +121,27 @@ The frontend keeps a small local cache and transaction history in `localStorage`
 
 The contract is immutable. A change to the admin, pricing model, grace period, or minimum listing period requires a new deployment and a new contract id.
 
+## Verify the contract
+
+Retium does not host source code. The chain stores the compiled wasm and its code hash, so verification means rebuilding the wasm and comparing hashes. The deployed wasm is checked in at `contracts/rns_v3.wasm`, so anyone can run the check without a build:
+
+```bash
+retium verify dbc99e8693aadc3b3aba03860858d76784692e9f19cd036c4b7c7265ce42cc77 contracts/rns_v3.wasm
+```
+
+To reproduce those exact bytes from source, build the `contract/` directory, which carries the Rust source and the SDK crate it needs:
+
+```bash
+cd contract
+cargo build --release --locked --target wasm32-unknown-unknown -p rns_v3
+retium verify dbc99e8693aadc3b3aba03860858d76784692e9f19cd036c4b7c7265ce42cc77 `
+  target\wasm32-unknown-unknown\release\rns_v3.wasm
+```
+
+Both commands must print `match` and the code hash `ddf2690c18a55dc38b6489a1cbd7ddc3588bb863d05f4856aff7d314687d8db9`. The build is pinned to rustc `1.91.1` (`rust-toolchain.toml`) and to `Cargo.lock`, and needs no extra flags on Windows or Linux. See `contract/README.md` for the tests and for the reason the source has to keep the SDK's directory layout.
+
+A match proves that the running code is this source. It does not prove that the source is safe, and the explorer will keep showing "Source not published" because Retium has no source-upload registry — the hash check is the verification.
+
 ## Repository layout
 
 ```text
@@ -128,6 +149,8 @@ The contract is immutable. A change to the admin, pricing model, grace period, o
 |-- app.html          Application shell and modals
 |-- app.js            Wallet, contract reads, transactions, rendering
 |-- config.js         Network, contract id, RPC, history limit
+|-- contract/         Rust source of the contract, buildable on its own
+|-- contracts/        Deployed wasm and its verification notes
 |-- index.html        Landing page
 |-- landing.css       Landing page styles
 |-- landing.js        Landing page interactions
@@ -140,7 +163,7 @@ The contract is immutable. A change to the admin, pricing model, grace period, o
 `-- README.md
 ```
 
-The contract source is kept in the Retium SDK workspace at `examples/rns_v3/src/lib.rs`. The deployed wasm is 81,388 bytes and its code hash is recorded above.
+The contract source lives in `contract/`, laid out like the Retium SDK workspace it was written in (`crates/retium-contract` plus `examples/rns_v3`), so it builds without the SDK checkout. The deployed wasm is 81,388 bytes, its code hash is recorded above, and a copy is kept in `contracts/rns_v3.wasm` for verification.
 
 ## Local development
 
